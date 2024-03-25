@@ -46,6 +46,7 @@ pipeline {
               echo "docker building image..."
               sh 'cd $WORKSPACE'
 	          sh 'docker build --file Dockerfile --tag sharmi459/abc_tech:$BUILD_NUMBER .'
+	          sh script: 'ansible-playbook -i localhost, deploy/dockerbuild-push.yml'
            }	
         }
         stage('push docker image') {
