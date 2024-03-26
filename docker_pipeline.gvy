@@ -1,36 +1,37 @@
+
 pipeline {
     agent any
 
     tools {
-        maven 'Maven3.9.6'
-    }
+       maven 'Maven3.9.6'
+       }
     stages {
-        stage('ABC_CodeCompile') {
+       stage('code compile') {
            steps {
-             echo "compiling..."
+             echo "perform code compiling.."
              git 'https://github.com/sr691/ABC-project.git'
              sh 'mvn compile'
 
            }
 
         }
-
-        stage('ABC_Unittest') {
+		
+        stage('unit test') {
            steps { 
-             echo "testing..."
+             echo "perform unit testing.."
              sh 'mvn test'
            }
-
+		
            post {
              always {
               junit stdioRetention: '', testResults: 'target/surefire-reports/*.xml'
              }
            }
         }
-
-        stage('ABC_Package') {
+		
+        stage('package') {
            steps {
-              echo "packaging..."
+              echo "generate the war file"
               sh 'mvn package'
            }
 
@@ -40,34 +41,36 @@ pipeline {
              }
            }
         }
+		
+		stage('build docker image') {
+           steps {
+              echo "build docker image using docker file"
+              sh 'docker build --file Dockerfile --tag sharmi459/abc_tech:$BUILD_NUMBER .'
+           }
 
-        stage('docker build ') {
-	         steps {
-              echo "docker building image..."
-	      echo '$WORKSPACE'
-	      sh 'ls -la $WORKSPACE'
-              sh 'cd $WORKSPACE'
-	          sh 'docker build --file Dockerfile --tag sharmi459/abc_tech:$BUILD_NUMBER .'
-	          sh script: 'ansible-playbook -i localhost, deploy/dockerbuild-push.yml'
-           }	
         }
-        stage('push docker image') {
-	        steps {
-              echo "pushing image to docker hub..."
-	          withDockerRegistry(credentialsId: 'DOCKER_HUB_LOGIN', url: 'https://index.docker.io/v1/') {
-              sh 'docker push docker.io/sharmi459/abc_tech:$BUILD_NUMBER'
+		
+		stage('push docker image') {
+	       steps {
+	           withDockerRegistry(credentialsId: 'DOCKER_HUB_LOGIN', url: 'https://index.docker.io/v1/') {
+               sh script: 'docker push docker.io/sharmi459/abc_tech:$BUILD_NUMBER'
                 }
 	           
 	        }
-		    }
-        stage('docker deploy') {
-          steps {
-            echo "deploying to docker container..."
-            sh 'docker stop abc-container || true' 
-            sh 'docker rm -f abc-container || true' 
-            sh 'docker run -d -P --name abc-container sharmi459/abc_tech:$BUILD_NUMBER'
-            sh 'docker ps -a'
-          }
-        }
+		          
+		}
+		
+		stage('docker deploy') {
+	       steps {
+	           echo "deploying the abc docker container into tomact server"
+	           sh 'docker stop abc-container || true'
+			   sh 'docker rm -f abc-container || true'
+			   sh 'docker run -d -p 9090:8080 --name abc-container sharmi459/abc_tech:$BUILD_NUMBER'
+			   #sh 'docker run -d -P --name abc-container sharmi459/abc_tech:$BUILD_NUMBER'
+	        }
+		
+		}
+	
     }
+
 }
