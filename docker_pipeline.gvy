@@ -64,9 +64,8 @@ pipeline {
 	       steps {
 	           echo "deploying the abc docker container into tomact server"
 	           sh 'docker stop abc-container || true'
-			   sh 'docker rm -f abc-container || true'
-			   sh 'docker run -d -p 9090:8080 --name abc-container sharmi459/abc_tech:$BUILD_NUMBER'
-			   #sh 'docker run -d -P --name abc-container sharmi459/abc_tech:$BUILD_NUMBER'
+		   sh 'docker rm -f abc-container || true'
+		   sh 'docker run -d -P --name abc-container sharmi459/abc_tech:$BUILD_NUMBER'
 	        }
 		
 		}
