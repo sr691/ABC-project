@@ -7,25 +7,25 @@
   tasks: 
     - name: Deploying Application pods...
       shell: | 
-         if [ `kubectl get deployment | grep -v NAME | awk '{print $1}' | grep abc_tech | wc -l` -gt 0 ]; then  
+         if [ `kubectl get deployment | grep -v NAME | awk '{print $1}' | grep abc-technologies | wc -l` -gt 0 ]; then  
             echo "deleteing previous application deployment"
-            kubectl delete deployment `kubectl get deployment | grep -v NAME | awk '{print $1}' | grep abc_tech`
+            kubectl delete deployment `kubectl get deployment | grep -v NAME | awk '{print $1}' | grep abc-tech`
             echo "creating new application deployment"
-            kubectl create deployment abc_tech --image=sharmi459/abc_tech:{{ build_number }}
+            kubectl create deployment abc-technologies --image=sharmi459/tech:{{ build_number }}
          else 
-            echo "Deploying abc_tech Application"
-            kubectl create deployment abc_tech --image=sharmi459/abc_tech:{{ build_number }}
+            echo "Deploying abc-technologies Application"
+            kubectl create deployment abc-technologies --image=sharmi459/tech:{{ build_number }}
          fi
     - name: deploying service
       shell: |
-         if [ `kubectl get svc | grep abc_svc  | awk '{print $1}' | wc -l` -gt 0 ]; then
+         if [ `kubectl get svc | grep abc-svc  | awk '{print $1}' | wc -l` -gt 0 ]; then
             echo "app service found, No actions taken"
-            #kubectl delete svc `kubectl get svc | grep abc_svc | awk '{print $1}'`
+            #kubectl delete svc `kubectl get svc | grep abc-svc | awk '{print $1}'`
          else
             echo "Creating App Services"
-            kubectl expose deployment abc_tech --name abc-svc --type NodePort --port 80 --target-port 8080
+            kubectl expose deployment abc-technologies --name abc-svc --type NodePort --port 80 --target-port 8080
          fi
     - name: increase replicas 
-      shell: kubectl scale deploy abc_tech --replicas=2
+      shell: kubectl scale deploy abc-technologies --replicas=2
       
     
