@@ -44,6 +44,8 @@ pipeline {
         stage('docker build ') {
 	         steps {
               echo "docker building image..."
+	      echo $WORKSPACE
+	      sh 'ls -la $WORKSPACE'
               sh 'cd $WORKSPACE'
 	          sh 'docker build --file Dockerfile --tag sharmi459/abc_tech:$BUILD_NUMBER .'
 	          sh script: 'ansible-playbook -i localhost, deploy/dockerbuild-push.yml'
