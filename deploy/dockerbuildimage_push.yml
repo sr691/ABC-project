@@ -8,7 +8,7 @@
       shell:
         cmd: |
           cd {{ workspace }}
-          docker build --file Dockerfile --tag sharmi459/abc_tech:latest 
+          docker build --file Dockerfile --tag sharmi459/abc_tech:latest .
       vars:
         workspace: "{{ lookup('env', 'WORKSPACE') }}"
         
