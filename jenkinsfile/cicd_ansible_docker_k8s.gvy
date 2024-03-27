@@ -1,12 +1,12 @@
 pipeline {
     agent any
     tools {
-        maven 'maven3.9.6'
+        maven 'Maven3.9.6'
     }
     stages {
       stage('compile') {
 	        steps {
-		            git url: 'https://github.com/lerndevopswithdurga/ABC_Technologies.git'
+		            git url: 'https://github.com/sr691/ABC-project.git'
 		            sh script: '/opt/maven/bin/mvn compile'
           }
       }
