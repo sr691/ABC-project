@@ -6,7 +6,7 @@ pipeline {
     stages {
       stage('compile') {
 	        steps {
-		            git url: 'https://github.com/sr691/ABC-project.git.git'
+		            git url: 'https://github.com/sr691/ABC-project.git'
 		            sh script: '/opt/maven/bin/mvn compile'
           }
       }
