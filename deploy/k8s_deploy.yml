@@ -1,3 +1,4 @@
+
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -15,8 +16,8 @@ spec:
         app: abc_app
     spec:
       containers:
-      - name: abc_tech
-        image: https://github.com/sr691/ABC-project.git
+      - name: abc-technologies
+        image: sharmi459/abc_tech:latest
         ports:
         - name: http
           containerPort: 8080
